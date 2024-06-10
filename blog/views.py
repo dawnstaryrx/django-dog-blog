@@ -11,8 +11,6 @@ from django.db.models import Q
 import tempfile
 from django.http import FileResponse
 from django.utils.encoding import escape_uri_path
-import os
-from django.conf import settings
 
 
 def login_page(request):
@@ -41,7 +39,25 @@ def logout_page(request):
 
 
 def home(request):
-    return render(request, 'home.html')
+    article = Article()
+    try:
+        article = Article.objects.get(title='home')
+    except:
+        article.title = "home"
+        article.content = ""
+    article.content = markdown.markdown(article.content,
+        extensions=[
+        'markdown.extensions.fenced_code',
+        # 包含 缩写、表格等常用扩展
+        'markdown.extensions.extra',
+        'markdown.extensions.tables',
+        # 语法高亮扩展
+        'markdown.extensions.codehilite',
+        # 自动生成目录
+        'markdown.extensions.toc',
+        ])
+    context = {"article": article}
+    return render(request, 'home.html', context)
 
 def posts(request):
     q = request.GET.get('q') if request.GET.get('q') != None else ''
