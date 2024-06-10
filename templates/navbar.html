@@ -1,0 +1,27 @@
+<header>
+  <h2>▼・ᴥ・▼ DogBlog</h2>
+  <nav>
+    <p>
+      <span>
+        <a href="{% url "home-page" %}">主页</a>
+        <a href="{% url "posts-page" %}">文章</a>
+        <a href="{% url "categories-page" %}">分类</a>
+        {% if user.is_authenticated %}
+        
+        {% endif %}
+      </span>
+      
+      <span style="float: right;">
+        {% if user.is_authenticated %}
+        <a href="{% url "write-page" %}">创作</a>
+        {{ user.username }}
+        <a href="{% url "logout-page" %}">登出</a>
+        {% else %}
+        <a href="{% url "login-page" %}">登录</a>
+        {% endif %}
+      </span>
+      
+    </p>
+  </nav>
+  <hr>
+</header>

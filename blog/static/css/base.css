@@ -1,0 +1,23 @@
+a{
+  text-decoration: none;
+  color: rgb(65, 114, 219);
+}
+a:hover{
+  text-decoration: underline;
+}
+a:visited{
+  color: rgb(65, 114, 219);
+}
+@media screen and (min-width: 800px){
+  body{
+    width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+}
+@media screen and (max-width: 799px){
+  body{
+    padding: 20px;
+    margin: 0;
+  }
+}

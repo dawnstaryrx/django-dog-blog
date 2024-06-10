@@ -1,0 +1,53 @@
+{% extends "base.html" %} 
+
+{% block content %}
+<style>
+  .category-item::marker{
+    content: "»";
+    color: green;
+  }
+</style>
+<content>
+  {% if user.is_authenticated %}
+  <div style="text-align: right;">
+    <a href="{% url 'create-category' %}"> 创建类别 </a>
+    <a href="{% url 'create-tag' %}"> 创建标签 </a>
+  </div>
+  {% endif %}
+  <div>
+    <ul style="padding-left: 9px;">
+      {% for category in categories %}
+        <li class="category-item" style="margin-bottom: 6px;">
+          <span style="margin-left: 8px;">
+            <a href="{% url 'posts-page' %}?c={{ category.name }}"> {{ category.name }} </a>
+          </span>
+          {% if user.is_superuser %}
+          <span style="float: right;">
+            <a href="{% url 'update-category' category.id %}">编辑</a>
+            <a href="{% url 'delete-category' category.id %}">删除</a>
+          </span>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+  <div>
+    <h3>标签</h3>
+    <p>
+      {% if user.is_superuser %}
+        {% for tag in tags %}
+        <span style="margin-right: 6px;">
+          <a href="{% url 'posts-page' %}?t={{ tag.name }}"> #{{ tag.name }} </a>(<a href="{% url 'update-tag' tag.id %}">r</a>,<a href="{% url 'delete-tag' tag.id %}">d</a>)
+        </span>
+        {% endfor %}
+      {% else %}
+        {% for tag in tags %}
+        <span style="margin-right: 6px;">
+          <a href="{% url 'posts-page' %}?t={{ tag.name }}"> #{{ tag.name }} </a>
+        </span>
+        {% endfor %}
+      {% endif %}
+    </p>
+  </div>
+</content>
+{% endblock content %}

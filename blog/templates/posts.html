@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+<content>
+  <form action="{% url 'posts-page' %}" method="get">
+    <input type="text" name="q" placeholder="搜索..." />
+    <input type="submit" value="查询" />
+  </form>
+  <div>
+    <ul style="padding-left: 3px;">
+      {% for article in page_obj %}
+        <li style="border-bottom: 1px; border-color: azure; height: 30px;list-style: none;">
+          {% if article.status == 'd' %}
+          <span >
+            <a href="{% url 'article-detail' article.id %}" style="color: rgb(104,184,142)">{{article.title}}</a>
+          </span>
+          {% else %}
+            <a href="{% url 'article-detail' article.id %}">{{article.title}}</a>
+          {% endif %}
+          <i style="float: right;">
+            <span style="color: lightblue; margin-left: 6px; width: 70px; float:left;">
+              &and; {{ article.views }}
+            </span>
+            <span>
+              {{article.published}} 
+            </span>
+          </i>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</content>
+{% if is_paginated %}
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; 第一页</a>
+            <a href="?page={{ page_obj.previous_page_number }}">上一页</a>
+        {% endif %}
+
+        <span class="current">
+            第{{ page_obj.number }}页 共{{ page_obj.paginator.num_pages }}页
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">下一页</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">最后一页 &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+{% endif %}
+{% endblock content %}

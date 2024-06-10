@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+<content>
+  <h1>
+    {{ article.title }}
+  </h1>  
+  <h5>
+    <span style="color: lightblue;">
+      分类： <a href="{% url 'posts-page' %}?c={{ article.category }}" style="color: lightblue;"> {{ article.category }} </a>
+    </span>
+    <span style="float: right; color: lightblue;">
+      &and; {{ article.views }}
+    </span>
+  </h5>
+  <div>
+    {{ article.content|safe }}
+  </div>
+  <hr>
+  <small style="color: lightskyblue;">
+    {{artice.tags}}
+    {% for tag in article.tags.all %}
+      <a href="{% url 'posts-page' %}?t={{ tag }}" style="color: lightskyblue;"> #{{ tag }} </a>
+    {% empty %}
+      没有所属标签 ૮ ̷ ̷ ̷・ﻌ ̷ ̷・ ა
+    {% endfor %}
+  </small>
+  <br>
+  <small>
+    <span>
+      {% if article.published == artice.updated %}
+      发布于{{ article.published }}
+      {% else %}
+      发布于{{ article.published }}， 编辑于{{ article.updated }}
+      {% endif %}
+    </span>
+    <span style="float: right;">
+      {% if user.is_authenticated %}
+      <a href="{% url 'article-update' article.id %}"> 修改 </a>
+      {% endif %}
+      {% if user.is_superuser %}
+      <a href="{% url 'article-delete' article.id %}"> 删除 </a>
+      {% endif %}
+      <a href="{% url 'article-download' article.id %}"> 下载 </a>
+    </span>
+  </small>
+</content>
+{% endblock content %}
