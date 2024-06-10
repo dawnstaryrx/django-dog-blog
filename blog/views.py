@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .forms import CategoryForm, TagForm, ArticleForm
-from .models import Category, Tag, Article
+from .forms import CategoryForm, TagForm, ArticleForm, PictureForm
+from .models import Category, Tag, Article, Picture
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -9,14 +9,15 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import markdown
 from django.db.models import Q
 import tempfile
-from django.http import JsonResponse
 from django.http import FileResponse
 from django.utils.encoding import escape_uri_path
-from django.core import serializers
+import os
+from django.conf import settings
 
 
 def login_page(request):
-
+    if request.user.is_authenticated:
+        return redirect("home-page")
     if request.method == "POST":
         username = request.POST.get("username").lower()
         password = request.POST.get("password")
@@ -50,7 +51,8 @@ def posts(request):
         if t != "" and t != None:
             articles = Article.objects.all().filter(
                 Q(title__icontains = q) |
-                Q(content__icontains = q)
+                Q(content__icontains = q) |
+                Q(category__name__icontains = q)
             ).filter(
                 Q(category__name__icontains = c)
             ).filter(
@@ -59,7 +61,8 @@ def posts(request):
         else:
             articles = Article.objects.all().filter(
                 Q(title__icontains = q) |
-                Q(content__icontains = q)
+                Q(content__icontains = q) |
+                Q(category__name__icontains = q)
             ).filter(
                 Q(category__name__icontains = c)
             )
@@ -69,7 +72,8 @@ def posts(request):
                 Q(status='p') &
                 (
                     Q(title__icontains = q) |
-                    Q(content__icontains = q)
+                    Q(content__icontains = q) |
+                    Q(category__name__icontains = q)
                 )
                 ).filter(
                 Q(category__name__icontains = c)
@@ -81,12 +85,13 @@ def posts(request):
                 Q(status='p') &
                 (
                     Q(title__icontains = q) |
-                    Q(content__icontains = q)
+                    Q(content__icontains = q) |
+                    Q(category__name__icontains = q)
                 )
                 ).filter(
                 Q(category__name__icontains = c)
                 )
-    paginator = Paginator(articles, 15)   # 实例化分页对象
+    paginator = Paginator(articles, 20)   # 实例化分页对象
     page = request.GET.get('page')       # 从url获取页码
     try:
         page_obj = paginator.page(page)
@@ -100,6 +105,9 @@ def posts(request):
 
 def article_detail(request, pk):
     article = Article.objects.get(id=int(pk))
+    # article.views += 1
+    # article.save()
+    article.viewed()
     # 将markdown语法渲染成html样式
     article.content = markdown.markdown(article.content,
         extensions=[
@@ -113,8 +121,6 @@ def article_detail(request, pk):
         'markdown.extensions.toc',
         ])
     context = {"article": article}
-    article.views += 1
-    # article.save()
     return render(request, 'article_detail.html', context)
 
 def article_update(request, pk):
@@ -224,3 +230,28 @@ def write(request):
             form.save()
             return redirect("posts-page")
     return render(request, 'write.html', context)
+
+
+def picture_page(request):
+    pictures = Picture.objects.all()
+    paginator = Paginator(pictures, 30)   # 实例化分页对象
+    page = request.GET.get('page')       # 从url获取页码
+    try:
+        page_obj = paginator.page(page)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)     # 如果传入不是整数，默认第一页
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
+    is_paginated = True if paginator.num_pages > 1 else False   # 页数小于1，不使用分页
+    context = {'page_obj': page_obj, 'is_paginated': is_paginated}
+    return render(request, 'picture.html', context)
+
+def upload_picture(request):
+    # return render(request, '/admin/blog/picture/add/')
+    return redirect('/admin/blog/picture/add/')
+
+def page_not_found(request, exception):
+    return render(request, '404.html')
+
+def internet_server_error(request):
+    return render(request, '404.html')

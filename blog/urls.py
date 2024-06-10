@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
     path("", views.home, name = "home-page"),
@@ -22,4 +24,10 @@ urlpatterns = [
     # login logout
     path("login/", views.login_page, name="login-page"),
     path("logout/", views.logout_page, name="logout-page"),
-]
+    # picture
+    path("picture/", views.picture_page, name="picture-page"),
+    path("picture/upload/", views.upload_picture, name="picture-upload"),
+    
+]+static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
+handler404 = views.page_not_found 
+handler500 = views.internet_server_error

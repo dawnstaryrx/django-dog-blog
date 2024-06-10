@@ -57,3 +57,16 @@ class Article(models.Model):
         ordering = ['-published']
         verbose_name = "文章"
         verbose_name_plural = verbose_name
+
+class Picture(models.Model):
+    name = models.CharField('标题', max_length=50,  blank=True, null=True)
+    img = models.ImageField('图片', upload_to = 'image', blank=True, null=True)
+    created = models.DateTimeField('创建时间', auto_now_add=True)
+
+    def __str__(self):
+        return self.img.url
+    
+    class Meta:
+        ordering = ['-created']
+        verbose_name = "图库"
+        verbose_name_plural = verbose_name

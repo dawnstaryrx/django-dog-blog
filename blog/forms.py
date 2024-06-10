@@ -1,5 +1,5 @@
 from django.forms import ModelForm, TextInput, Textarea
-from .models import Category, Tag, Article
+from .models import Category, Tag, Article, Picture
 
 class CategoryForm(ModelForm):
     class Meta:
@@ -10,6 +10,11 @@ class CategoryForm(ModelForm):
 class TagForm(ModelForm):
     class Meta:
         model = Tag
+        fields = "__all__"
+
+class PictureForm(ModelForm):
+    class Meta:
+        model = Picture
         fields = "__all__"
 
 class ArticleForm(ModelForm):

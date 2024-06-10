@@ -1,32 +1,25 @@
 {% extends "base.html" %}
 {% block content %}
 <content>
-  <form action="{% url 'posts-page' %}" method="get">
-    <input type="text" name="q" placeholder="搜索..." />
-    <input type="submit" value="查询" />
-  </form>
+  <div>
+    <span style="float: right;">
+      <a href="{% url "picture-upload" %}">
+      上传图片
+      </a>
+    </span>
+  </div><br>
   <div>
     <ul style="padding-left: 3px;">
-      {% for article in page_obj %}
+      {% for pic in page_obj %}
         <li style=" border-color: azure; height: 30px;list-style: none;">
-          {% if article.status == 'd' %}
-          <span >
-            <a href="{% url 'article-detail' article.id %}" style="color: rgb(104,184,142)">{{article.title}}</a>
+          <span> {{pic.id}} </span>
+          <span>
+            <a href={{pic.img.url}} >{{pic.img.url |slice:'20'}}</a>
           </span>
-          {% else %}
-            <a href="{% url 'article-detail' article.id %}">{{article.title}}</a>
-          {% endif %}
-          <i style="float: right;">
-            <small style="color: lightblue; margin-left: 6px; width: 70px; float:left;">
-              &and; {{ article.views }}
-            </small>
-            <small>
-              {{article.published}} 
-            </small>
-          </i>
-          <hr style="margin: 0; padding: 0; Opacity:10%">
+          <span style="float:right;">
+            {{ pic.created }}
+          </span>
         </li>
-        
       {% endfor %}
     </ul>
   </div>
