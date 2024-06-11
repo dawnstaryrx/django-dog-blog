@@ -11,6 +11,7 @@ from django.db.models import Q
 import tempfile
 from django.http import FileResponse
 from django.utils.encoding import escape_uri_path
+from django.contrib.auth.decorators import login_required
 
 
 def login_page(request):
@@ -139,6 +140,7 @@ def article_detail(request, pk):
     context = {"article": article}
     return render(request, 'article_detail.html', context)
 
+@login_required(login_url= "login-page")
 def article_update(request, pk):
     article = Article.objects.get(id=int(pk))
     form = ArticleForm(instance=article)
@@ -150,6 +152,7 @@ def article_update(request, pk):
     context = {'form': form}
     return render(request, 'write.html', context)
 
+@login_required(login_url= "login-page")
 def article_delete(request, pk):
     article = Article.objects.get(id=int(pk))
     if request.method == "POST":
@@ -179,6 +182,7 @@ def categories(request):
     context = {"categories": categories, "tags":tags}
     return render(request, 'categories.html', context)
 
+@login_required(login_url= "login-page")
 def create_category(request):
     form = CategoryForm()
     context = {'form': form}
@@ -189,6 +193,7 @@ def create_category(request):
             return redirect("categories-page")
     return render(request, 'form/category_form.html', context)
 
+@login_required(login_url= "login-page")
 def update_category(request, pk):
     category = Category.objects.get(id=int(pk))
     form = CategoryForm(instance=category)
@@ -200,6 +205,7 @@ def update_category(request, pk):
     context = {'form': form}
     return render(request, 'form/category_form.html', context)
 
+@login_required(login_url= "login-page")
 def delete_category(request, pk):
     category = Category.objects.get(id=int(pk))
     if request.method == "POST":
@@ -208,7 +214,7 @@ def delete_category(request, pk):
     return render(request, 'form/delete.html', {'obj':category})
 
 # 标签
-
+@login_required(login_url= "login-page")
 def create_tag(request):
     form = TagForm()
     context = {'form': form}
@@ -219,6 +225,7 @@ def create_tag(request):
             return redirect("categories-page")
     return render(request, 'form/category_form.html', context)
 
+@login_required(login_url= "login-page")
 def update_tag(request, pk):
     tag = Tag.objects.get(id=int(pk))
     form = TagForm(instance=tag)
@@ -230,6 +237,7 @@ def update_tag(request, pk):
     context = {'form': form}
     return render(request, 'form/category_form.html', context)
 
+@login_required(login_url= "login-page")
 def delete_tag(request, pk):
     tag = Tag.objects.get(id=int(pk))
     if request.method == "POST":
@@ -237,6 +245,7 @@ def delete_tag(request, pk):
         return redirect('categories-page')
     return render(request, 'form/delete.html', {'obj':tag})
 
+@login_required(login_url= "login-page")
 def write(request):
     form = ArticleForm
     context = {'form': form}
@@ -262,6 +271,7 @@ def picture_page(request):
     context = {'page_obj': page_obj, 'is_paginated': is_paginated}
     return render(request, 'picture.html', context)
 
+@login_required(login_url= "login-page")
 def upload_picture(request):
     # return render(request, '/admin/blog/picture/add/')
     return redirect('/admin/blog/picture/add/')
