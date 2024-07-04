@@ -1,3 +1,7 @@
+html{
+  font-family: STZhongsong,Georgia, serif;
+  /* font-weight: bold; */
+}
 a{
   text-decoration: none;
   color: rgb(65, 114, 219);
