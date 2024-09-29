@@ -1,5 +1,7 @@
 from django.db import models
 from django.utils.timezone import now
+from django.utils.functional import cached_property
+from django.urls import reverse
 
 # Create your models here.
 class Category(models.Model):
@@ -57,6 +59,10 @@ class Article(models.Model):
         ordering = ['-published']
         verbose_name = "文章"
         verbose_name_plural = verbose_name
+    
+    def get_absolute_url(self):
+        return reverse("article-detail", kwargs={"pk": self.pk})  # 使用新的 URL 名称
+    
 
 class Picture(models.Model):
     name = models.CharField('标题', max_length=50,  blank=True, null=True)

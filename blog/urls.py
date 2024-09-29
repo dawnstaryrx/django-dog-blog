@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 from django.conf.urls.static import static
 from django.conf import settings
+from .feeds import AllArticlesFeed
 
 urlpatterns = [
     path("", views.home, name = "home-page"),
@@ -27,6 +28,8 @@ urlpatterns = [
     # picture
     path("picture/", views.picture_page, name="picture-page"),
     path("picture/upload/", views.upload_picture, name="picture-upload"),
+    # 添加 RSS Feed URL
+    path('rss/all/', AllArticlesFeed(), name='all_articles_feed'),
     
 ]+static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
 handler404 = views.page_not_found 

@@ -12,6 +12,7 @@
       </span>
       
       <span style="float: right;">
+        <a href="{% url 'all_articles_feed' %}">RSS订阅</a>
         {% if user.is_authenticated %}
         <a href="{% url "write-page" %}">创作</a>
         <a href="{% url "picture-page" %}">图片</a>
